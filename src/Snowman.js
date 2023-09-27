@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { randomWord, ENGLISH_WORDS } from "./words";
 
 import "./Snowman.css";
 import img0 from "./0.png";
@@ -25,23 +26,23 @@ const DEFAULT_IMAGES = [img0, img1, img2, img3, img4, img5, img6];
  */
 
 function Snowman({
-      images=DEFAULT_IMAGES,
-      words=["apple"],
-      maxWrong=6,
-    }) {
+  images = DEFAULT_IMAGES,
+  words = ENGLISH_WORDS,
+  maxWrong = 6,
+}) {
   /** by default, allow 6 guesses and use provided gallows images. */
 
   const [nWrong, setNWrong] = useState(0);
   const [guessedLetters, setGuessedLetters] = useState(() => new Set());
-  const [answer, setAnswer] = useState((words)[0]);
+  const [answer, setAnswer] = useState(randomWord(words));
 
   /** guessedWord: show current-state of word:
    if guessed letters are {a,p,e}, show "app_e" for "apple"
    */
   function guessedWord() {
     return answer
-        .split("")
-        .map(ltr => (guessedLetters.has(ltr) ? ltr : "_"));
+      .split("")
+      .map(ltr => (guessedLetters.has(ltr) ? ltr : "_"));
   }
 
   /** handleGuess: handle a guessed letter:
@@ -60,29 +61,44 @@ function Snowman({
     setNWrong(n => n + (answer.includes(ltr) ? 0 : 1));
   }
 
+
+  /** restartGame: resets the game to intial state with new answer word */
+  function restartGame() {
+    setAnswer(randomWord(words));
+    setNWrong(0);
+    setGuessedLetters(() => new Set()); //TODO: Q: why is this a callback?
+  }
+
   /** generateButtons: return array of letter buttons to render */
   function generateButtons() {
     return "abcdefghijklmnopqrstuvwxyz".split("").map(ltr => (
-        <button
-            key={ltr}
-            value={ltr}
-            onClick={handleGuess}
-            disabled={guessedLetters.has(ltr)}
-        >
-          {ltr}
-        </button>
+      <button
+        key={ltr}
+        value={ltr}
+        onClick={handleGuess}
+        disabled={guessedLetters.has(ltr)}
+      >
+        {ltr}
+      </button>
     ));
   }
-
+  //TODO: to show win message -- see if return value of guessedWord .includes("_")?
+  // Is there a more efficient way to reference what's already in the DOM?
   return (
-      <div className="Snowman">
-        <img src={(images)[nWrong]} alt={nWrong} />
-        <p className="Snowman-word">{guessedWord()}</p>
-        <p className="Snowman-wrong-guess">{nWrong}</p>
-        <p>{generateButtons()}</p>
-      </div>
+    <div className="Snowman">
+      <img src={(images)[nWrong]} alt={nWrong} />
+      <p className="Snowman-word">{guessedWord()}</p>
+      <p className="Snowman-wrong-guess">{nWrong}</p>
+      {nWrong < maxWrong &&
+        <p className="Snowman-button-area" >{generateButtons()}</p>}
+      {nWrong === maxWrong &&
+        <h3>You Lose</h3>}
+      <button
+        className="Snowman-reset-button"
+        onClick={restartGame}>Restart</button>
+    </div>
   );
 }
 
-export { DEFAULT_IMAGES }
+export { DEFAULT_IMAGES };
 export default Snowman;

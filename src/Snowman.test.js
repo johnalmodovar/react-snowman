@@ -16,5 +16,32 @@ it("should display game over screen when you lose", function () {
     fireEvent.click(container.querySelector('button[value="m"]'));
 
     expect( container ).toContainHTML("You Lose");
+  expect(container.querySelector(".Snowman-button-area"))
+    .not.toBeInTheDocument();
 
   })
+
+it("should match snapshot, game start", function () {
+  const { container, debug } =
+    render(<Snowman images={DEFAULT_IMAGES}
+      words={["apple"]}
+      maxWrong={6} />);
+
+  expect(container).toMatchSnapshot();
+});
+
+it("should match snapshot, game end", function () {
+  const { container, debug } =
+    render(<Snowman images={DEFAULT_IMAGES}
+      words={["apple"]}
+      maxWrong={6} />);
+
+  fireEvent.click(container.querySelector('button[value="q"]'));
+  fireEvent.click(container.querySelector('button[value="t"]'));
+  fireEvent.click(container.querySelector('button[value="u"]'));
+  fireEvent.click(container.querySelector('button[value="g"]'));
+  fireEvent.click(container.querySelector('button[value="n"]'));
+  fireEvent.click(container.querySelector('button[value="m"]'));
+
+  expect(container).toMatchSnapshot();
+});
