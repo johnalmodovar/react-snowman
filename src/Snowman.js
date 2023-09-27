@@ -66,7 +66,7 @@ function Snowman({
   function restartGame() {
     setAnswer(randomWord(words));
     setNWrong(0);
-    setGuessedLetters(() => new Set()); //TODO: Q: why is this a callback?
+    setGuessedLetters(() => new Set());
   }
 
   /** generateButtons: return array of letter buttons to render */
