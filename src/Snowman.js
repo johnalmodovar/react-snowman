@@ -9,6 +9,7 @@ import img4 from "./4.png";
 import img5 from "./5.png";
 import img6 from "./6.png";
 
+const DEFAULT_IMAGES = [img0, img1, img2, img3, img4, img5, img6];
 
 /** Snowman game: plays hangman-style game with a melting snowman.
  *
@@ -24,7 +25,7 @@ import img6 from "./6.png";
  */
 
 function Snowman({
-      images=[img0, img1, img2, img3, img4, img5, img6],
+      images=DEFAULT_IMAGES,
       words=["apple"],
       maxWrong=6,
     }) {
@@ -77,10 +78,11 @@ function Snowman({
       <div className="Snowman">
         <img src={(images)[nWrong]} alt={nWrong} />
         <p className="Snowman-word">{guessedWord()}</p>
+        <p className="Snowman-wrong-guess">{nWrong}</p>
         <p>{generateButtons()}</p>
       </div>
   );
 }
 
-
+export { DEFAULT_IMAGES }
 export default Snowman;
